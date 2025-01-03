@@ -8,6 +8,7 @@ public class BaseApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BaseApplication.class, args);
+		System.out.println("Aplicación corriendo en: http://localhost:8080/");
 	}
 
 }
