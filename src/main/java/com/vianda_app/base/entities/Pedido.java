@@ -26,6 +26,12 @@ public class Pedido {
     public Pedido() {
     }
 
+    public Pedido(Usuario usuario, Vianda vianda, LocalDateTime fecha) {
+        this.usuario = usuario;
+        this.vianda = vianda;
+        this.fecha = fecha;
+    }
+
     public Integer getId() {
         return id;
     }

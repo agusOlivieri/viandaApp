@@ -15,8 +15,6 @@ public class ViandaDistribuidora {
     @Column(nullable = false)
     private String nombre;
 
-    @OneToMany(mappedBy = "distribuidora")
-    private List<Vianda> viandas;
 
     public ViandaDistribuidora() {
     }
@@ -37,11 +35,4 @@ public class ViandaDistribuidora {
         this.nombre = nombre;
     }
 
-    public List<Vianda> getViandas() {
-        return viandas;
-    }
-
-    public void setViandas(List<Vianda> viandas) {
-        this.viandas = viandas;
-    }
 }

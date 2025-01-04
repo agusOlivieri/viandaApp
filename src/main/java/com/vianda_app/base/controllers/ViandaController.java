@@ -5,7 +5,6 @@ import com.vianda_app.base.entities.Usuario;
 import com.vianda_app.base.entities.Vianda;
 import com.vianda_app.base.entities.ViandaDistribuidora;
 import com.vianda_app.base.services.DistribuidoraService;
-import com.vianda_app.base.services.PedidoService;
 import com.vianda_app.base.services.UsuarioService;
 import com.vianda_app.base.services.ViandaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +19,6 @@ public class ViandaController {
     private ViandaService viandaService;
 
     @Autowired
-    private PedidoService pedidoService;
-
-    @Autowired
     private UsuarioService usuarioService;
 
     @Autowired
@@ -31,11 +27,6 @@ public class ViandaController {
     @GetMapping("/viandas")
     public List<Vianda> getAllViandas() {
         return viandaService.getAll();
-    }
-
-    @GetMapping("/pedidos")
-    public List<Pedido> getAllPedidos() {
-        return pedidoService.getAll();
     }
 
     @GetMapping("/distribuidoras")

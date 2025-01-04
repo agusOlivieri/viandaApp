@@ -13,4 +13,8 @@ public class ViandaService {
     private ViandaRepository viandaRepository;
 
     public List<Vianda> getAll() { return viandaRepository.findAll(); }
+
+    public Vianda getById(Integer viandaId) {
+        return viandaRepository.findById(viandaId).orElseThrow(() -> new RuntimeException("Vianda no encontrada."));
+    }
 }
