@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "pedido_id")
     private Integer id;
 
     @ManyToOne
