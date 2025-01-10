@@ -2,7 +2,6 @@ package com.vianda_app.base.controllers;
 
 import com.vianda_app.base.dtos.RegistroRequest;
 import com.vianda_app.base.entities.Rol;
-import com.vianda_app.base.entities.RolNombre;
 import com.vianda_app.base.entities.Usuario;
 import com.vianda_app.base.repositories.RolRepository;
 import com.vianda_app.base.services.UsuarioService;
@@ -28,15 +27,10 @@ public class AuthController {
             return ResponseEntity.badRequest().body("El nombre de usuario ya existe.");
         }
 
-        Usuario usuario = new Usuario();
-        usuario.setNombre(registroRequest.getUsername());
-        usuario.setEmail(registroRequest.getEmail());
-        usuario.setApellido(registroRequest.getApellido());
-
-        Rol rol = rolRepository.findByNombre(RolNombre.valueOf(registroRequest.getRol()))
+        Rol rol = rolRepository.findByNombre(registroRequest.getRol())
                 .orElseThrow(() -> new RuntimeException("Rol no encontrado: " + registroRequest.getRol()));
 
-        usuario.setRol(rol);
+        Usuario usuario = new Usuario(registroRequest.getUsername(), registroRequest.getApellido(), registroRequest.getEmail(), registroRequest.getPassword(), rol);
 
         usuarioService.save(usuario);
         return ResponseEntity.ok("Usuario registrado exitosamente.");

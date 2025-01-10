@@ -10,9 +10,8 @@ public class Rol {
     @Column(name = "rol_id")
     private Integer id;
 
-    @Enumerated(EnumType.STRING)
     @Column(unique = true, nullable = false)
-    private RolNombre nombre;
+    private String nombre;
 
     public Rol() {
     }
@@ -25,11 +24,11 @@ public class Rol {
         this.id = id;
     }
 
-    public RolNombre getNombre() {
+    public String getNombre() {
         return nombre;
     }
 
-    public void setNombre(RolNombre nombre) {
+    public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 }

@@ -22,10 +22,19 @@ public class Usuario {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "rol_id", nullable = false)
     private Rol rol;
 
     public Usuario() {
+    }
+
+    public Usuario(String nombre, String apellido, String email, String password, Rol rol) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.email = email;
+        this.password = password;
+        this.rol = rol;
     }
 
     public Integer getId() {
