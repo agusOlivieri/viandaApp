@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsuarioService {
@@ -28,5 +29,9 @@ public class UsuarioService {
 
     public boolean existsByNombre(String nombre) {
         return usuarioRepository.existsByNombre(nombre);
+    }
+
+    public Optional<Usuario> getByNombre(String nombre) {
+        return usuarioRepository.findByNombre(nombre);
     }
 }
