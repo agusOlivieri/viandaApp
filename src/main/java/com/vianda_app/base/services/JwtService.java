@@ -1,6 +1,7 @@
 package com.vianda_app.base.services;
 
 import com.vianda_app.base.entities.Usuario;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
@@ -45,5 +47,32 @@ public class JwtService {
     private SecretKey getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public String extractUsername(final String token) {
+        final Claims jwtToken = Jwts.parser()
+                .verifyWith(getSignInKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        return jwtToken.getSubject();
+    }
+
+    public boolean isTokenValid(final String token, final Usuario usuario) {
+        final String userNombre = extractUsername(token);
+        return (userNombre.equals(usuario.getNombre())) && !isTokenExpired(token);
+    }
+
+    public boolean isTokenExpired(final String token) {
+        return extractExpiration(token).before(new Date());
+    }
+
+    public Date extractExpiration(final String token) {
+        final Claims jwtToken = Jwts.parser()
+                .verifyWith(getSignInKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        return jwtToken.getExpiration();
     }
 }
