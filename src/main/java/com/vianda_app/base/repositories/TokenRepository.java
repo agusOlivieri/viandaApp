@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface TokenRepository  extends JpaRepository<Token, Integer> {
-    List<Token> findAllValidIsFalseOrRevokedIsFalseByUserId(Integer id);
+    List<Token> findAllValidIsFalseOrRevokedIsFalseByUsuarioId(Integer id);
 }

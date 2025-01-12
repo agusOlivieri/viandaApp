@@ -11,6 +11,7 @@ import com.vianda_app.base.repositories.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -79,7 +80,7 @@ public class AuthService {
     }
 
     private void revokeAllUserTokens(final Usuario usuario) {
-        final List<Token> validUserTokens = tokenRepository.findAllValidIsFalseOrRevokedIsFalseByUserId(usuario.getId());
+        final List<Token> validUserTokens = tokenRepository.findAllValidIsFalseOrRevokedIsFalseByUsuarioId(usuario.getId());
 
         if (!validUserTokens.isEmpty()) {
             for (final Token token : validUserTokens) {
@@ -88,5 +89,30 @@ public class AuthService {
             }
             tokenRepository.saveAll(validUserTokens);
         }
+    }
+
+    public TokenResponse refreshToken(final String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new IllegalArgumentException("Invalid Bearer Token.");
+        }
+
+        final String refreshToken = authHeader.substring(7);
+        final String userNombre = jwtService.extractUsername(refreshToken);
+
+        if (userNombre == null) {
+            throw new IllegalArgumentException("Invalid Refresh Token.");
+        }
+
+        final Usuario usuario = usuarioService.getByNombre(userNombre)
+                .orElseThrow(() -> new UsernameNotFoundException(userNombre));
+
+        if (!jwtService.isTokenValid(refreshToken, usuario)) {
+            throw new IllegalArgumentException("Invalid Refresh Token.");
+        }
+
+        final String accessToken = jwtService.generateToken(usuario);
+        revokeAllUserTokens(usuario);
+        saveUserToken(usuario, accessToken);
+        return new TokenResponse(accessToken, refreshToken);
     }
 }

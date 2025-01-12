@@ -6,14 +6,13 @@ import com.vianda_app.base.entities.Rol;
 import com.vianda_app.base.entities.Token;
 import com.vianda_app.base.entities.Usuario;
 import com.vianda_app.base.repositories.RolRepository;
+import com.vianda_app.base.repositories.TokenRepository;
 import com.vianda_app.base.services.AuthService;
 import com.vianda_app.base.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -35,5 +34,10 @@ public class AuthController {
     public ResponseEntity<TokenResponse> authenticate(@RequestBody final LoginRequest request) {
         final TokenResponse token = authService.login(request);
         return ResponseEntity.ok(token);
+    }
+
+    @PostMapping("/refresh")
+    public TokenResponse refreshToken(@RequestHeader(HttpHeaders.AUTHORIZATION) final String authHeader) {
+        return authService.refreshToken(authHeader);
     }
 }
