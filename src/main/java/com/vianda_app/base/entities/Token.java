@@ -3,7 +3,7 @@ package com.vianda_app.base.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "tokens")
+@Table(name = "HTE_tokens")
 public class Token {
 
     public enum TokenType {
