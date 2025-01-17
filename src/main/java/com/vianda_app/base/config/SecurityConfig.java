@@ -33,7 +33,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers("/auth/**")
+                        req.requestMatchers("/api/auth/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
@@ -42,7 +42,7 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout ->
-                        logout.logoutUrl("/auth/logout")
+                        logout.logoutUrl("/api/auth/logout")
                                 .addLogoutHandler((request, response, authentication) -> {
                                     final var authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
                                     logout(authHeader);
