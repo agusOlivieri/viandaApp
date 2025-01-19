@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
@@ -36,7 +35,10 @@ public class JwtService {
     public String buildToken(final Usuario usuario, final long expiration) {
         return Jwts.builder()
                 .id(usuario.getId().toString())
-                .claims(Map.of("name", usuario.getNombre()))
+                .claims(Map.of(
+                        "name", usuario.getNombre(),
+                        "role", usuario.getRol().getNombre()
+                        ))
                 .subject(usuario.getNombre())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiration))
@@ -56,6 +58,15 @@ public class JwtService {
                 .parseSignedClaims(token)
                 .getPayload();
         return jwtToken.getSubject();
+    }
+
+    public String extractRol(final String token) {
+        final Claims jwtToken = Jwts.parser()
+                .verifyWith(getSignInKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        return jwtToken.get("role", String.class);
     }
 
     public boolean isTokenValid(final String token, final Usuario usuario) {
