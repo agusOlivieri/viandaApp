@@ -36,11 +36,10 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests(req ->
-                        req.requestMatchers("/api/auth/**")
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated()
+                .authorizeHttpRequests(req -> req
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/pedidos/**").authenticated()
+                        .anyRequest().authenticated()
                 )
 
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
