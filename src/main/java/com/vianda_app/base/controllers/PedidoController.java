@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/pedidos")
+@RequestMapping("/api/pedidos")
 public class PedidoController {
     @Autowired
     private PedidoService pedidoService;
@@ -23,7 +23,7 @@ public class PedidoController {
         return pedidoService.getAll();
     }
 
-    @PostMapping("/nuevo")
+    @PostMapping("/new")
     public ResponseEntity<Object> createPedido(@RequestBody PedidoDTO request) {
         try {
             Pedido pedido = pedidoService.create(request.getUsuarioId(), request.getViandaId(), request.getFechaHora());
