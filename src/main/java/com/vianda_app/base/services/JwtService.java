@@ -37,7 +37,8 @@ public class JwtService {
                 .id(usuario.getId().toString())
                 .claims(Map.of(
                         "name", usuario.getNombre(),
-                        "role", "ROLE_" + usuario.getRol().getNombre()
+                        "role", "ROLE_" + usuario.getRol().getNombre(),
+                        "userId", usuario.getId()
                         ))
                 .subject(usuario.getNombre())
                 .issuedAt(new Date(System.currentTimeMillis()))
