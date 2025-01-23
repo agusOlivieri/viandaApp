@@ -9,11 +9,13 @@ import com.vianda_app.base.services.UsuarioService;
 import com.vianda_app.base.services.ViandaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/viandas")
 public class ViandaController {
     @Autowired
     private ViandaService viandaService;
@@ -24,7 +26,7 @@ public class ViandaController {
     @Autowired
     private DistribuidoraService distribuidoraService;
 
-    @GetMapping("/viandas")
+    @GetMapping
     public List<Vianda> getAllViandas() {
         return viandaService.getAll();
     }
