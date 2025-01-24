@@ -39,6 +39,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/pedidos/**").authenticated()
+                        .requestMatchers("/api/viandas/**").authenticated()
                         .anyRequest().authenticated()
                 )
 
