@@ -24,6 +24,13 @@ public class Vianda {
     public Vianda() {
     }
 
+    public Vianda(String nombre, String descripcion, Integer precio, ViandaDistribuidora distribuidora) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.precio = precio;
+        this.distribuidora = distribuidora;
+    }
+
     public Integer getId() {
         return id;
     }

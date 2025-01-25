@@ -1,5 +1,7 @@
 package com.vianda_app.base.controllers;
 
+import com.vianda_app.base.dtos.PedidoDTO;
+import com.vianda_app.base.dtos.ViandaDTO;
 import com.vianda_app.base.entities.Pedido;
 import com.vianda_app.base.entities.Usuario;
 import com.vianda_app.base.entities.Vianda;
@@ -8,11 +10,13 @@ import com.vianda_app.base.services.DistribuidoraService;
 import com.vianda_app.base.services.UsuarioService;
 import com.vianda_app.base.services.ViandaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/viandas")
@@ -31,9 +35,18 @@ public class ViandaController {
         return viandaService.getAll();
     }
 
-    @GetMapping("/distribuidoras")
-    public List<ViandaDistribuidora> getAllDistribuidoras() {
-        return distribuidoraService.getAll();
+    @PostMapping("/new")
+    public ResponseEntity<Object> createVianda(@RequestBody ViandaDTO request) {
+        try {
+            Vianda vianda = viandaService.create(request.getNombre(), request.getDescripcion(), request.getPrecio(), request.getDistribuidora());
+            return ResponseEntity.status(HttpStatus.CREATED).body(vianda);
+        } catch (Exception e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("Error", "No se pudo crear el pedido");
+            errorResponse.put("Detalle", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
+
     }
 
     @GetMapping("/usuarios")
