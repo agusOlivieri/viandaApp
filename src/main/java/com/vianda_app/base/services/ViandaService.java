@@ -31,4 +31,9 @@ public class ViandaService {
         Vianda vianda = new Vianda(nombre, desc, precio, distribuidora);
         return viandaRepository.save(vianda);
     }
+
+    @Transactional
+    public Vianda update() {
+        return null;
+    }
 }

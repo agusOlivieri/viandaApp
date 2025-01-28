@@ -42,11 +42,23 @@ public class ViandaController {
             return ResponseEntity.status(HttpStatus.CREATED).body(vianda);
         } catch (Exception e) {
             Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("Error", "No se pudo crear el pedido");
+            errorResponse.put("Error", "No se pudo crear la vianda");
             errorResponse.put("Detalle", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
+    }
 
+    @PostMapping("/update")
+    public ResponseEntity<Object> updateVianda(@RequestBody ViandaDTO request) {
+        try {
+            Vianda vianda = viandaService.update();
+            return ResponseEntity.status(HttpStatus.OK).body(vianda);
+        } catch (Exception e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("Error", "No se pudo actualizar la vianda");
+            errorResponse.put("Detalle", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
     }
 
     @GetMapping("/usuarios")
