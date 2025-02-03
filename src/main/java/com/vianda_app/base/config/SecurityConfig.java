@@ -40,6 +40,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/pedidos/**").authenticated()
                         .requestMatchers("/api/viandas/**").authenticated()
+                        .requestMatchers("/api/area/**").permitAll()
                         .anyRequest().authenticated()
                 )
 
