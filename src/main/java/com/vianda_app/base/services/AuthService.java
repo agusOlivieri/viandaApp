@@ -3,9 +3,11 @@ package com.vianda_app.base.services;
 import com.vianda_app.base.controllers.TokenResponse;
 import com.vianda_app.base.dtos.LoginRequest;
 import com.vianda_app.base.dtos.RegistroRequest;
+import com.vianda_app.base.entities.Area;
 import com.vianda_app.base.entities.Rol;
 import com.vianda_app.base.entities.Token;
 import com.vianda_app.base.entities.Usuario;
+import com.vianda_app.base.repositories.AreaRepository;
 import com.vianda_app.base.repositories.RolRepository;
 import com.vianda_app.base.repositories.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class AuthService {
     private RolRepository rolRepository;
 
     @Autowired
+    private AreaRepository areaRepository;
+
+    @Autowired
     private UsuarioService usuarioService;
 
     private final TokenRepository tokenRepository;
@@ -40,13 +45,15 @@ public class AuthService {
 
     public TokenResponse register(RegistroRequest request) {
         Rol rol = rolRepository.findByNombre(request.getRol()).orElseThrow(() -> new RuntimeException("Rol no encontrado: " + request.getRol()));
+        Area area = areaRepository.findByNombre(request.getArea()).orElseThrow(() -> new RuntimeException("Área no encontrada: " + request.getArea()));
 
         Usuario usuario = new Usuario(
                 request.getUsername(),
                 request.getApellido(),
                 request.getEmail(),
                 passwordEncoder.encode(request.getPassword()),
-                rol
+                rol,
+                area
         );
 
         Usuario usuarioNuevo = usuarioService.save(usuario);
