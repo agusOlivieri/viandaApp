@@ -25,6 +25,10 @@ public class Usuario {
     private String password;
 
     @ManyToOne
+    @JoinColumn(name = "area_id", nullable = false)
+    private Area area;
+
+    @ManyToOne
     @JoinColumn(name = "rol_id", nullable = false)
     private Rol rol;
 
@@ -34,12 +38,13 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(String nombre, String apellido, String email, String password, Rol rol) {
+    public Usuario(String nombre, String apellido, String email, String password, Rol rol, Area area) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
         this.password = password;
         this.rol = rol;
+        this.area = area;
     }
 
     public Integer getId() {
@@ -96,5 +101,13 @@ public class Usuario {
 
     public void setTokens(List<Token> tokens) {
         this.tokens = tokens;
+    }
+
+    public Area getArea() {
+        return area;
+    }
+
+    public void setArea(Area area) {
+        this.area = area;
     }
 }
