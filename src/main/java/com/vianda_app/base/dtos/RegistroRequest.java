@@ -11,6 +11,8 @@ public class RegistroRequest {
 
     private String rol;
 
+    private String area;
+
     public RegistroRequest() {
     }
 
@@ -52,6 +54,14 @@ public class RegistroRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
     }
 }
 
