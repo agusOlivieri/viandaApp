@@ -1,9 +1,6 @@
 package com.vianda_app.base.controllers;
 
-import com.vianda_app.base.dtos.PedidoDTO;
 import com.vianda_app.base.dtos.ViandaDTO;
-import com.vianda_app.base.entities.Pedido;
-import com.vianda_app.base.entities.Usuario;
 import com.vianda_app.base.entities.Vianda;
 import com.vianda_app.base.entities.ViandaDistribuidora;
 import com.vianda_app.base.services.DistribuidoraService;
@@ -61,9 +58,9 @@ public class ViandaController {
         }
     }
 
-    @GetMapping("/usuarios")
-    public List<Usuario> getAllUsuarios() {
-        return usuarioService.getAll();
+    @GetMapping("/distribuidoras")
+    public List<ViandaDistribuidora> getAllDistribuidoras() {
+        return distribuidoraService.getAll();
     }
 
 }
