@@ -63,4 +63,9 @@ public class ViandaController {
         return distribuidoraService.getAll();
     }
 
+    @GetMapping("/{distribuidora}")
+    public List<Vianda> getAllViandasFromDistribuidora(@PathVariable String distribuidora) {
+        return viandaService.getAllByDistribuidora(distribuidora);
+    }
+
 }

@@ -36,4 +36,10 @@ public class ViandaService {
     public Vianda update() {
         return null;
     }
+
+    public List<Vianda> getAllByDistribuidora(String distribuidoraNombre) {
+        ViandaDistribuidora distribuidora = distribuidoraService.getByNombre(distribuidoraNombre);
+
+        return viandaRepository.findByDistribuidora(distribuidora);
+    }
 }

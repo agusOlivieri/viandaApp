@@ -38,8 +38,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/pedidos/**").authenticated()
-                        .requestMatchers("/api/viandas/**").authenticated()
+                        .requestMatchers("/api/pedidos/**").permitAll()
+                        .requestMatchers("/api/viandas/**").permitAll()
                         .requestMatchers("/api/area/**").permitAll()
                         .anyRequest().authenticated()
                 )
