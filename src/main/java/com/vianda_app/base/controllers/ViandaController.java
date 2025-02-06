@@ -1,5 +1,6 @@
 package com.vianda_app.base.controllers;
 
+import com.vianda_app.base.dtos.UpdateViandaDTO;
 import com.vianda_app.base.dtos.ViandaDTO;
 import com.vianda_app.base.entities.Vianda;
 import com.vianda_app.base.entities.ViandaDistribuidora;
@@ -45,11 +46,16 @@ public class ViandaController {
         }
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<Object> updateVianda(@RequestBody ViandaDTO request) {
+    @PutMapping("/update")
+    public ResponseEntity<Object> updateVianda(@RequestBody UpdateViandaDTO request) {
         try {
-            Vianda vianda = viandaService.update();
-            return ResponseEntity.status(HttpStatus.OK).body(vianda);
+            Vianda vianda = viandaService.getById(request.getId());
+            vianda.setNombre(request.getNombre());
+            vianda.setDescripcion(request.getDescripcion());
+            vianda.setPrecio(request.getPrecio());
+
+            Vianda updatedVianda = viandaService.update(vianda);
+            return ResponseEntity.status(HttpStatus.OK).body(updatedVianda);
         } catch (Exception e) {
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("Error", "No se pudo actualizar la vianda");

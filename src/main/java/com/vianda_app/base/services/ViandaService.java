@@ -33,8 +33,8 @@ public class ViandaService {
     }
 
     @Transactional
-    public Vianda update() {
-        return null;
+    public Vianda update(Vianda vianda) {
+        return viandaRepository.save(vianda);
     }
 
     public List<Vianda> getAllByDistribuidora(String distribuidoraNombre) {
