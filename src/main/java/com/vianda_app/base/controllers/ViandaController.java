@@ -64,6 +64,19 @@ public class ViandaController {
         }
     }
 
+    @DeleteMapping("/{viandaId}")
+    public ResponseEntity<Object> deleteVianda(@PathVariable Integer viandaId) {
+        try {
+            viandaService.delete(viandaId);
+            return ResponseEntity.ok("Vianda eliminada correctamente");
+        } catch (Exception e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("Error", "No se pudo eliminar la vianda");
+            errorResponse.put("Detalle", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
+    }
+
     @GetMapping("/distribuidoras")
     public List<ViandaDistribuidora> getAllDistribuidoras() {
         return distribuidoraService.getAll();

@@ -37,6 +37,14 @@ public class ViandaService {
         return viandaRepository.save(vianda);
     }
 
+    @Transactional
+    public void delete(Integer viandaId) {
+        if (!viandaRepository.existsById(viandaId)) {
+            throw new IllegalArgumentException("No se encontró la vianda con ID: " + viandaId);
+        }
+        viandaRepository.deleteById(viandaId);
+    }
+
     public List<Vianda> getAllByDistribuidora(String distribuidoraNombre) {
         ViandaDistribuidora distribuidora = distribuidoraService.getByNombre(distribuidoraNombre);
 
