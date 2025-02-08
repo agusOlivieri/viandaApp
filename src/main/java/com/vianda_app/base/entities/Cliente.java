@@ -11,6 +11,10 @@ public class Cliente extends Usuario{
     @JoinColumn(name = "area_id", nullable = false)
     private Area area;
 
+    public Cliente() {
+        super();
+    }
+
     public Cliente(String nombre, String apellido, String email, String password, Area area) {
         super(nombre, apellido, email, password);
         this.area = area;

@@ -57,8 +57,8 @@ public class AuthService {
         );
 
         Cliente clienteNuevo = usuarioService.saveCliente(cliente);
-        var jwtToken = jwtService.generateClienteToken(cliente);
-        var refreshToken = jwtService.generateClienteRefreshToken(cliente);
+        var jwtToken = jwtService.generateToken(cliente);
+        var refreshToken = jwtService.generateRefreshToken(cliente);
 
         saveUserToken(clienteNuevo, jwtToken);
         return new TokenResponse(jwtToken, refreshToken);
@@ -76,23 +76,29 @@ public class AuthService {
         );
 
         Administrador adminNuevo = usuarioService.saveAdmin(administrador);
-        var jwtToken = jwtService.generateAdminToken(administrador);
-        var refreshToken = jwtService.generateAdminRefreshToken(administrador);
+        var jwtToken = jwtService.generateToken(administrador);
+        var refreshToken = jwtService.generateRefreshToken(administrador);
 
         saveUserToken(adminNuevo, jwtToken);
         return new TokenResponse(jwtToken, refreshToken);
     };
 
     public TokenResponse login(LoginRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
-                )
-        );
-        var usuario = usuarioService.getByNombre(request.getUsername()).orElseThrow();
-        var jwtToken = jwtService.generateClienteToken(usuario);
-        var refreshToken = jwtService.generateClienteRefreshToken(usuario);
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(),
+                            request.getPassword()
+                    )
+            );
+        } catch (Exception e) {
+            System.out.println("Error al autenticar: " + e.getMessage());
+            throw e;
+        }
+
+        var usuario = usuarioService.getByNombre(request.getUsername()).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+        var jwtToken = jwtService.generateToken(usuario);
+        var refreshToken = jwtService.generateRefreshToken(usuario);
         revokeAllUserTokens(usuario);
         saveUserToken(usuario, jwtToken);
 
@@ -129,14 +135,14 @@ public class AuthService {
             throw new IllegalArgumentException("Invalid Refresh Token.");
         }
 
-        final Cliente usuario = usuarioService.getByNombre(userNombre)
+        final Usuario usuario = usuarioService.getByNombre(userNombre)
                 .orElseThrow(() -> new UsernameNotFoundException(userNombre));
 
         if (!jwtService.isTokenValid(refreshToken, usuario)) {
             throw new IllegalArgumentException("Invalid Refresh Token.");
         }
 
-        final String accessToken = jwtService.generateClienteToken(usuario);
+        final String accessToken = jwtService.generateToken(usuario);
         revokeAllUserTokens(usuario);
         saveUserToken(usuario, accessToken);
         return new TokenResponse(accessToken, refreshToken);

@@ -45,7 +45,7 @@ public class UsuarioService {
         return usuarioRepository.existsByNombre(nombre);
     }
 
-    public Optional<Cliente> getByNombre(String nombre) {
-        return clienteRepository.findByNombre(nombre);
+    public Optional<Usuario> getByNombre(String nombre) {
+        return usuarioRepository.findByNombre(nombre);
     }
 }

@@ -16,6 +16,10 @@ public class Administrador extends Usuario{
         this.distribuidora = distribuidora;
     }
 
+    public Administrador() {
+        super();
+    }
+
     public ViandaDistribuidora getDistribuidora() {
         return distribuidora;
     }
