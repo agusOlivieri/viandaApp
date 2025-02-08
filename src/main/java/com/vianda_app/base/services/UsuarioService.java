@@ -1,6 +1,10 @@
 package com.vianda_app.base.services;
 
+import com.vianda_app.base.entities.Administrador;
+import com.vianda_app.base.entities.Cliente;
 import com.vianda_app.base.entities.Usuario;
+import com.vianda_app.base.repositories.AdministradorRepository;
+import com.vianda_app.base.repositories.ClienteRepository;
 import com.vianda_app.base.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +19,12 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
+    private ClienteRepository clienteRepository;
+
+    @Autowired
+    private AdministradorRepository administradorRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     public List<Usuario> getAll() { return usuarioRepository.findAll(); }
@@ -23,8 +33,12 @@ public class UsuarioService {
         return usuarioRepository.findById(usuarioId).orElseThrow(() -> new RuntimeException("Usuario no encontrado."));
     }
 
-    public Usuario save(Usuario usuario) {
-        return usuarioRepository.save(usuario);
+    public Cliente saveCliente(Cliente cliente) {
+        return clienteRepository.save(cliente);
+    }
+
+    public Administrador saveAdmin(Administrador admin) {
+        return administradorRepository.save(admin);
     }
 
     public boolean existsByNombre(String nombre) {

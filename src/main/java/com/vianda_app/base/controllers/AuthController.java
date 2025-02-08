@@ -1,7 +1,8 @@
 package com.vianda_app.base.controllers;
 
 import com.vianda_app.base.dtos.LoginRequest;
-import com.vianda_app.base.dtos.RegistroRequest;
+import com.vianda_app.base.dtos.RegistroAdminRequest;
+import com.vianda_app.base.dtos.RegistroClienteRequest;
 import com.vianda_app.base.services.AuthService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +18,15 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<TokenResponse> register(@RequestBody final RegistroRequest request) {
-        final TokenResponse token = authService.register(request);
+    @PostMapping("/register/cliente")
+    public ResponseEntity<TokenResponse> register(@RequestBody final RegistroClienteRequest request) {
+        final TokenResponse token = authService.registerCliente(request);
+        return ResponseEntity.ok(token);
+    }
+
+    @PostMapping("/register/admin")
+    public ResponseEntity<TokenResponse> register(@RequestBody final RegistroAdminRequest request) {
+        final TokenResponse token = authService.registerAdmin(request);
         return ResponseEntity.ok(token);
     }
 

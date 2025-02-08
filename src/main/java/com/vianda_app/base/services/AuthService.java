@@ -2,12 +2,11 @@ package com.vianda_app.base.services;
 
 import com.vianda_app.base.controllers.TokenResponse;
 import com.vianda_app.base.dtos.LoginRequest;
-import com.vianda_app.base.dtos.RegistroRequest;
-import com.vianda_app.base.entities.Area;
-import com.vianda_app.base.entities.Rol;
-import com.vianda_app.base.entities.Token;
-import com.vianda_app.base.entities.Usuario;
+import com.vianda_app.base.dtos.RegistroAdminRequest;
+import com.vianda_app.base.dtos.RegistroClienteRequest;
+import com.vianda_app.base.entities.*;
 import com.vianda_app.base.repositories.AreaRepository;
+import com.vianda_app.base.repositories.DistribuidoraRepository;
 import com.vianda_app.base.repositories.RolRepository;
 import com.vianda_app.base.repositories.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +28,9 @@ public class AuthService {
     private AreaRepository areaRepository;
 
     @Autowired
+    private DistribuidoraRepository distribuidoraRepository;
+
+    @Autowired
     private UsuarioService usuarioService;
 
     private final TokenRepository tokenRepository;
@@ -43,35 +45,58 @@ public class AuthService {
         this.authenticationManager = authenticationManager;
     }
 
-    public TokenResponse register(RegistroRequest request) {
-        Rol rol = rolRepository.findByNombre(request.getRol()).orElseThrow(() -> new RuntimeException("Rol no encontrado: " + request.getRol()));
+    public TokenResponse registerCliente(RegistroClienteRequest request) {
         Area area = areaRepository.findByNombre(request.getArea()).orElseThrow(() -> new RuntimeException("Área no encontrada: " + request.getArea()));
 
-        Usuario usuario = new Usuario(
+        Cliente cliente = new Cliente(
                 request.getUsername(),
                 request.getApellido(),
                 request.getEmail(),
                 passwordEncoder.encode(request.getPassword()),
-                rol,
                 area
         );
 
-        Usuario usuarioNuevo = usuarioService.save(usuario);
-        var jwtToken = jwtService.generateToken(usuario);
-        var refreshToken = jwtService.generateRefreshToken(usuario);
+        Cliente clienteNuevo = usuarioService.saveCliente(cliente);
+        var jwtToken = jwtService.generateToken(cliente);
+        var refreshToken = jwtService.generateRefreshToken(cliente);
 
-        saveUserToken(usuarioNuevo, jwtToken);
+        saveUserToken(clienteNuevo, jwtToken);
+        return new TokenResponse(jwtToken, refreshToken);
+    };
+
+    public TokenResponse registerAdmin(RegistroAdminRequest request) {
+        ViandaDistribuidora distribuidora = distribuidoraRepository.findByNombre(request.getDistribuidora()).orElseThrow(() -> new RuntimeException("Distribuidora no encontrada: " + request.getDistribuidora()));
+
+        Administrador administrador = new Administrador(
+                request.getUsername(),
+                request.getApellido(),
+                request.getEmail(),
+                passwordEncoder.encode(request.getPassword()),
+                distribuidora
+        );
+
+        Administrador adminNuevo = usuarioService.saveAdmin(administrador);
+        var jwtToken = jwtService.generateToken(administrador);
+        var refreshToken = jwtService.generateRefreshToken(administrador);
+
+        saveUserToken(adminNuevo, jwtToken);
         return new TokenResponse(jwtToken, refreshToken);
     };
 
     public TokenResponse login(LoginRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
-                )
-        );
-        var usuario = usuarioService.getByNombre(request.getUsername()).orElseThrow();
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(),
+                            request.getPassword()
+                    )
+            );
+        } catch (Exception e) {
+            System.out.println("Error al autenticar: " + e.getMessage());
+            throw e;
+        }
+
+        var usuario = usuarioService.getByNombre(request.getUsername()).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
         var jwtToken = jwtService.generateToken(usuario);
         var refreshToken = jwtService.generateRefreshToken(usuario);
         revokeAllUserTokens(usuario);

@@ -1,6 +1,6 @@
 package com.vianda_app.base.dtos;
 
-public class RegistroRequest {
+public class RegistroClienteRequest {
     private String username;
 
     private String password;
@@ -9,11 +9,9 @@ public class RegistroRequest {
 
     private String email;
 
-    private String rol;
-
     private String area;
 
-    public RegistroRequest() {
+    public RegistroClienteRequest() {
     }
 
     public String getApellido() {
@@ -30,14 +28,6 @@ public class RegistroRequest {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getRol() {
-        return rol;
-    }
-
-    public void setRol(String rol) {
-        this.rol = rol;
     }
 
     public String getUsername() {
