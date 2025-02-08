@@ -6,6 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "usuarios")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,14 +25,6 @@ public class Usuario {
     @Column(nullable = false)
     private String password;
 
-    @ManyToOne
-    @JoinColumn(name = "area_id", nullable = false)
-    private Area area;
-
-    @ManyToOne
-    @JoinColumn(name = "rol_id", nullable = false)
-    private Rol rol;
-
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<Token> tokens;
 
@@ -43,8 +36,6 @@ public class Usuario {
         this.apellido = apellido;
         this.email = email;
         this.password = password;
-        this.rol = rol;
-        this.area = area;
     }
 
     public Integer getId() {
@@ -87,14 +78,6 @@ public class Usuario {
         this.password = password;
     }
 
-    public Rol getRol() {
-        return rol;
-    }
-
-    public void setRol(Rol rol) {
-        this.rol = rol;
-    }
-
     public List<Token> getTokens() {
         return tokens;
     }
@@ -103,11 +86,4 @@ public class Usuario {
         this.tokens = tokens;
     }
 
-    public Area getArea() {
-        return area;
-    }
-
-    public void setArea(Area area) {
-        this.area = area;
-    }
 }
