@@ -1,6 +1,8 @@
 package com.vianda_app.base.services;
 
 import com.vianda_app.base.entities.Usuario;
+import com.vianda_app.base.repositories.AdministradorRepository;
+import com.vianda_app.base.repositories.ClienteRepository;
 import com.vianda_app.base.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,6 +15,12 @@ import java.util.Optional;
 public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private ClienteRepository clienteRepository;
+
+    @Autowired
+    private AdministradorRepository administradorRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
