@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "administradores")
 @PrimaryKeyJoinColumn(name = "usuario_id")
-public class Administrador {
+public class Administrador extends Usuario{
 
     @ManyToOne
     @JoinColumn(name = "distribuidora_id", nullable = false)

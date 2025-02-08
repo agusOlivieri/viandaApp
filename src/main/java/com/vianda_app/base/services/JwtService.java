@@ -1,5 +1,6 @@
 package com.vianda_app.base.services;
 
+import com.vianda_app.base.entities.Cliente;
 import com.vianda_app.base.entities.Usuario;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -24,21 +25,21 @@ public class JwtService {
     @Value("${application.security.jwt.refresh-token.expiration}")
     private long refreshExpiration;
 
-    public String generateToken(final Usuario usuario) {
+    public String generateToken(final Cliente usuario) {
         return buildToken(usuario, jwtExpiration);
     }
 
-    public String generateRefreshToken(final Usuario usuario) {
+    public String generateRefreshToken(final Cliente usuario) {
         return buildToken(usuario, refreshExpiration);
     }
 
-    public String buildToken(final Usuario usuario, final long expiration) {
+    public String buildToken(final Cliente usuario, final long expiration) {
         return Jwts.builder()
                 .id(usuario.getId().toString())
                 .claims(Map.of(
                         "name", usuario.getNombre(),
-                        "role", "ROLE_" + usuario.getRol().getNombre(),
-                        "userId", usuario.getId()
+                        "userId", usuario.getId(),
+                        "area", usuario.getArea().getNombre()
                         ))
                 .subject(usuario.getNombre())
                 .issuedAt(new Date(System.currentTimeMillis()))

@@ -2,11 +2,8 @@ package com.vianda_app.base.services;
 
 import com.vianda_app.base.controllers.TokenResponse;
 import com.vianda_app.base.dtos.LoginRequest;
-import com.vianda_app.base.dtos.RegistroRequest;
-import com.vianda_app.base.entities.Area;
-import com.vianda_app.base.entities.Rol;
-import com.vianda_app.base.entities.Token;
-import com.vianda_app.base.entities.Usuario;
+import com.vianda_app.base.dtos.RegistroClienteRequest;
+import com.vianda_app.base.entities.*;
 import com.vianda_app.base.repositories.AreaRepository;
 import com.vianda_app.base.repositories.RolRepository;
 import com.vianda_app.base.repositories.TokenRepository;
@@ -43,24 +40,22 @@ public class AuthService {
         this.authenticationManager = authenticationManager;
     }
 
-    public TokenResponse register(RegistroRequest request) {
-        Rol rol = rolRepository.findByNombre(request.getRol()).orElseThrow(() -> new RuntimeException("Rol no encontrado: " + request.getRol()));
+    public TokenResponse registerUsuario(RegistroClienteRequest request) {
         Area area = areaRepository.findByNombre(request.getArea()).orElseThrow(() -> new RuntimeException("Área no encontrada: " + request.getArea()));
 
-        Usuario usuario = new Usuario(
+        Cliente cliente = new Cliente(
                 request.getUsername(),
                 request.getApellido(),
                 request.getEmail(),
                 passwordEncoder.encode(request.getPassword()),
-                rol,
                 area
         );
 
-        Usuario usuarioNuevo = usuarioService.save(usuario);
-        var jwtToken = jwtService.generateToken(usuario);
-        var refreshToken = jwtService.generateRefreshToken(usuario);
+        Cliente clienteNuevo = usuarioService.saveCliente(cliente);
+        var jwtToken = jwtService.generateToken(cliente);
+        var refreshToken = jwtService.generateRefreshToken(cliente);
 
-        saveUserToken(usuarioNuevo, jwtToken);
+        saveUserToken(clienteNuevo, jwtToken);
         return new TokenResponse(jwtToken, refreshToken);
     };
 
@@ -110,7 +105,7 @@ public class AuthService {
             throw new IllegalArgumentException("Invalid Refresh Token.");
         }
 
-        final Usuario usuario = usuarioService.getByNombre(userNombre)
+        final Cliente usuario = usuarioService.getByNombre(userNombre)
                 .orElseThrow(() -> new UsernameNotFoundException(userNombre));
 
         if (!jwtService.isTokenValid(refreshToken, usuario)) {
