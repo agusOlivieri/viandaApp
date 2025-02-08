@@ -20,15 +20,15 @@ public class AuthController {
 
     @PostMapping("/register/cliente")
     public ResponseEntity<TokenResponse> register(@RequestBody final RegistroClienteRequest request) {
-        final TokenResponse token = authService.registerUsuario(request);
+        final TokenResponse token = authService.registerCliente(request);
         return ResponseEntity.ok(token);
     }
 
-//    @PostMapping("/register/admin")
-//    public ResponseEntity<TokenResponse> register(@RequestBody final RegistroAdminRequest request) {
-//        final TokenResponse token = authService.registerUsuario(request);
-//        return ResponseEntity.ok(token);
-//    }
+    @PostMapping("/register/admin")
+    public ResponseEntity<TokenResponse> register(@RequestBody final RegistroAdminRequest request) {
+        final TokenResponse token = authService.registerAdmin(request);
+        return ResponseEntity.ok(token);
+    }
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> authenticate(@RequestBody final LoginRequest request) {

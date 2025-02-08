@@ -2,9 +2,11 @@ package com.vianda_app.base.services;
 
 import com.vianda_app.base.controllers.TokenResponse;
 import com.vianda_app.base.dtos.LoginRequest;
+import com.vianda_app.base.dtos.RegistroAdminRequest;
 import com.vianda_app.base.dtos.RegistroClienteRequest;
 import com.vianda_app.base.entities.*;
 import com.vianda_app.base.repositories.AreaRepository;
+import com.vianda_app.base.repositories.DistribuidoraRepository;
 import com.vianda_app.base.repositories.RolRepository;
 import com.vianda_app.base.repositories.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class AuthService {
     private AreaRepository areaRepository;
 
     @Autowired
+    private DistribuidoraRepository distribuidoraRepository;
+
+    @Autowired
     private UsuarioService usuarioService;
 
     private final TokenRepository tokenRepository;
@@ -40,7 +45,7 @@ public class AuthService {
         this.authenticationManager = authenticationManager;
     }
 
-    public TokenResponse registerUsuario(RegistroClienteRequest request) {
+    public TokenResponse registerCliente(RegistroClienteRequest request) {
         Area area = areaRepository.findByNombre(request.getArea()).orElseThrow(() -> new RuntimeException("Área no encontrada: " + request.getArea()));
 
         Cliente cliente = new Cliente(
@@ -52,10 +57,29 @@ public class AuthService {
         );
 
         Cliente clienteNuevo = usuarioService.saveCliente(cliente);
-        var jwtToken = jwtService.generateToken(cliente);
-        var refreshToken = jwtService.generateRefreshToken(cliente);
+        var jwtToken = jwtService.generateClienteToken(cliente);
+        var refreshToken = jwtService.generateClienteRefreshToken(cliente);
 
         saveUserToken(clienteNuevo, jwtToken);
+        return new TokenResponse(jwtToken, refreshToken);
+    };
+
+    public TokenResponse registerAdmin(RegistroAdminRequest request) {
+        ViandaDistribuidora distribuidora = distribuidoraRepository.findByNombre(request.getDistribuidora()).orElseThrow(() -> new RuntimeException("Distribuidora no encontrada: " + request.getDistribuidora()));
+
+        Administrador administrador = new Administrador(
+                request.getUsername(),
+                request.getApellido(),
+                request.getEmail(),
+                passwordEncoder.encode(request.getPassword()),
+                distribuidora
+        );
+
+        Administrador adminNuevo = usuarioService.saveAdmin(administrador);
+        var jwtToken = jwtService.generateAdminToken(administrador);
+        var refreshToken = jwtService.generateAdminRefreshToken(administrador);
+
+        saveUserToken(adminNuevo, jwtToken);
         return new TokenResponse(jwtToken, refreshToken);
     };
 
@@ -67,8 +91,8 @@ public class AuthService {
                 )
         );
         var usuario = usuarioService.getByNombre(request.getUsername()).orElseThrow();
-        var jwtToken = jwtService.generateToken(usuario);
-        var refreshToken = jwtService.generateRefreshToken(usuario);
+        var jwtToken = jwtService.generateClienteToken(usuario);
+        var refreshToken = jwtService.generateClienteRefreshToken(usuario);
         revokeAllUserTokens(usuario);
         saveUserToken(usuario, jwtToken);
 
@@ -112,7 +136,7 @@ public class AuthService {
             throw new IllegalArgumentException("Invalid Refresh Token.");
         }
 
-        final String accessToken = jwtService.generateToken(usuario);
+        final String accessToken = jwtService.generateClienteToken(usuario);
         revokeAllUserTokens(usuario);
         saveUserToken(usuario, accessToken);
         return new TokenResponse(accessToken, refreshToken);

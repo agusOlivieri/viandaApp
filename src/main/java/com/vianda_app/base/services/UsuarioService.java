@@ -37,7 +37,7 @@ public class UsuarioService {
         return clienteRepository.save(cliente);
     }
 
-    public Usuario saveAdmin(Administrador admin) {
+    public Administrador saveAdmin(Administrador admin) {
         return administradorRepository.save(admin);
     }
 

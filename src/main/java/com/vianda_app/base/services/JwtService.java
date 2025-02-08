@@ -1,5 +1,6 @@
 package com.vianda_app.base.services;
 
+import com.vianda_app.base.entities.Administrador;
 import com.vianda_app.base.entities.Cliente;
 import com.vianda_app.base.entities.Usuario;
 import io.jsonwebtoken.Claims;
@@ -25,15 +26,23 @@ public class JwtService {
     @Value("${application.security.jwt.refresh-token.expiration}")
     private long refreshExpiration;
 
-    public String generateToken(final Cliente usuario) {
-        return buildToken(usuario, jwtExpiration);
+    public String generateClienteToken(final Cliente usuario) {
+        return buildClienteToken(usuario, jwtExpiration);
     }
 
-    public String generateRefreshToken(final Cliente usuario) {
-        return buildToken(usuario, refreshExpiration);
+    public String generateClienteRefreshToken(final Cliente usuario) {
+        return buildClienteToken(usuario, refreshExpiration);
     }
 
-    public String buildToken(final Cliente usuario, final long expiration) {
+    public String generateAdminToken(final Administrador usuario) {
+        return buildAdminToken(usuario, jwtExpiration);
+    }
+
+    public String generateAdminRefreshToken(final Administrador usuario) {
+        return buildAdminToken(usuario, refreshExpiration);
+    }
+
+    public String buildClienteToken(final Cliente usuario, final long expiration) {
         return Jwts.builder()
                 .id(usuario.getId().toString())
                 .claims(Map.of(
@@ -41,6 +50,21 @@ public class JwtService {
                         "userId", usuario.getId(),
                         "area", usuario.getArea().getNombre()
                         ))
+                .subject(usuario.getNombre())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(getSignInKey())
+                .compact();
+    }
+
+    public String buildAdminToken(final Administrador usuario, final long expiration) {
+        return Jwts.builder()
+                .id(usuario.getId().toString())
+                .claims(Map.of(
+                        "name", usuario.getNombre(),
+                        "userId", usuario.getId(),
+                        "distribuidora", usuario.getDistribuidora().getNombre()
+                ))
                 .subject(usuario.getNombre())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiration))
