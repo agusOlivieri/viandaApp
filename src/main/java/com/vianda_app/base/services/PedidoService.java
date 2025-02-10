@@ -3,6 +3,7 @@ package com.vianda_app.base.services;
 import com.vianda_app.base.entities.Pedido;
 import com.vianda_app.base.entities.Usuario;
 import com.vianda_app.base.entities.Vianda;
+import com.vianda_app.base.entities.ViandaDistribuidora;
 import com.vianda_app.base.repositories.PedidoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class PedidoService {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private DistribuidoraService distribuidoraService;
+
     public List<Pedido> getAll() { return pedidoRepository.findAll(); }
 
     @Transactional
@@ -31,5 +35,9 @@ public class PedidoService {
 
         Pedido pedido = new Pedido(usuario, vianda, fechaHora);
         return pedidoRepository.save(pedido);
+    }
+
+    public List<Pedido> getAllByDistribuidora(String distribuidoraNombre) {
+        return pedidoRepository.findByDistribuidora(distribuidoraNombre);
     }
 }

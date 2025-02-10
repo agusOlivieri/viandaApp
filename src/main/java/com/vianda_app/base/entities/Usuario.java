@@ -25,8 +25,8 @@ public class Usuario {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
-    private List<Token> tokens;
+//    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
+//    private List<Token> tokens;
 
     public Usuario() {
     }
@@ -78,12 +78,12 @@ public class Usuario {
         this.password = password;
     }
 
-    public List<Token> getTokens() {
-        return tokens;
-    }
-
-    public void setTokens(List<Token> tokens) {
-        this.tokens = tokens;
-    }
+//    public List<Token> getTokens() {
+//        return tokens;
+//    }
+//
+//    public void setTokens(List<Token> tokens) {
+//        this.tokens = tokens;
+//    }
 
 }

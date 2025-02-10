@@ -2,6 +2,7 @@ package com.vianda_app.base.controllers;
 
 import com.vianda_app.base.dtos.PedidoDTO;
 import com.vianda_app.base.entities.Pedido;
+import com.vianda_app.base.entities.Vianda;
 import com.vianda_app.base.services.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,5 +36,11 @@ public class PedidoController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
 
+    }
+
+    @GetMapping("/{distribuidora}")
+    public ResponseEntity<List<Pedido>> getAllPedidosFromDistribuidora(@PathVariable String distribuidora) {
+        List<Pedido> pedidos = pedidoService.getAllByDistribuidora(distribuidora);
+        return ResponseEntity.ok(pedidos);
     }
 }
