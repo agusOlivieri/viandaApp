@@ -1,5 +1,6 @@
 package com.vianda_app.base.services;
 
+import com.vianda_app.base.controllers.PedidoSseController;
 import com.vianda_app.base.entities.Pedido;
 import com.vianda_app.base.entities.Usuario;
 import com.vianda_app.base.entities.Vianda;
@@ -26,6 +27,9 @@ public class PedidoService {
     @Autowired
     private DistribuidoraService distribuidoraService;
 
+    @Autowired
+    private PedidoSseController pedidoSseController;
+
     public List<Pedido> getAll() { return pedidoRepository.findAll(); }
 
     @Transactional
@@ -34,7 +38,11 @@ public class PedidoService {
         Vianda vianda = viandaService.getById(viandaId);
 
         Pedido pedido = new Pedido(usuario, vianda, fechaHora);
-        return pedidoRepository.save(pedido);
+        Pedido savedPedido = pedidoRepository.save(pedido);
+
+        pedidoSseController.enviarPedido(savedPedido);
+
+        return savedPedido;
     }
 
     public List<Pedido> getAllByDistribuidora(String distribuidoraNombre) {
