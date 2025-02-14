@@ -5,8 +5,7 @@ import com.vianda_app.base.entities.Pedido;
 import com.vianda_app.base.entities.Vianda;
 import com.vianda_app.base.services.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -42,5 +41,16 @@ public class PedidoController {
     public ResponseEntity<List<Pedido>> getAllPedidosFromDistribuidora(@PathVariable String distribuidora) {
         List<Pedido> pedidos = pedidoService.getAllByDistribuidora(distribuidora);
         return ResponseEntity.ok(pedidos);
+    }
+
+    @GetMapping("/remitos/csv")
+    public ResponseEntity<byte[]> generarRemitoCSV() {
+        byte[] csvBytes = pedidoService.generarRemitoCSV();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("text/csv"));
+        headers.setContentDisposition(ContentDisposition.attachment().filename("Remito_Pedidos.csv").build());
+
+        return new ResponseEntity<>(csvBytes, headers, HttpStatus.OK);
     }
 }

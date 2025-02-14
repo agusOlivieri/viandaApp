@@ -10,7 +10,11 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -47,5 +51,31 @@ public class PedidoService {
 
     public List<Pedido> getAllByDistribuidora(String distribuidoraNombre) {
         return pedidoRepository.findByDistribuidora(distribuidoraNombre);
+    }
+
+    public byte[] generarRemitoCSV() {
+        List<Pedido> pedidos = getPedidosDelDia();
+
+        StringBuilder csv = new StringBuilder();
+        csv.append("LEGAJO,NOMBRE,VIANDA,FECHA\n");
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+        for (Pedido pedido : pedidos) {
+            csv.append(pedido.getId()).append(",");
+            csv.append(pedido.getUsuario().getNombre()).append(",");
+            csv.append(pedido.getVianda().getNombre()).append(",");
+            csv.append(pedido.getFecha().format(formatter)).append("\n");
+        }
+
+        return csv.toString().getBytes(StandardCharsets.UTF_8);
+    }
+
+    public List<Pedido> getPedidosDelDia() {
+        LocalDate hoy = LocalDate.now();
+        LocalDateTime inicioDia = hoy.atStartOfDay();
+        LocalDateTime finDia = hoy.atTime(LocalTime.MAX);
+
+        return pedidoRepository.findPedidosDelDia(inicioDia, finDia);
     }
 }
