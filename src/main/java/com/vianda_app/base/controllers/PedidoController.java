@@ -38,14 +38,14 @@ public class PedidoController {
     }
 
     @GetMapping("/{distribuidora}")
-    public ResponseEntity<List<Pedido>> getAllPedidosFromDistribuidora(@PathVariable String distribuidora) {
+    public ResponseEntity<List<Pedido>> getAllPedidosDelDiaFromDistribuidora(@PathVariable String distribuidora) {
         List<Pedido> pedidos = pedidoService.getAllByDistribuidora(distribuidora);
         return ResponseEntity.ok(pedidos);
     }
 
     @GetMapping("/remitos/csv")
-    public ResponseEntity<byte[]> generarRemitoCSV() {
-        byte[] csvBytes = pedidoService.generarRemitoCSV();
+    public ResponseEntity<byte[]> generarRemitoCSV(@RequestParam String distribuidora) {
+        byte[] csvBytes = pedidoService.generarRemitoCSV(distribuidora);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType("text/csv"));

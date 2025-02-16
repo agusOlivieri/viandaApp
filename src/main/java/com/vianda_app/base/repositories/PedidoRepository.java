@@ -13,8 +13,8 @@ import java.util.List;
 
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
-    @Query("SELECT p FROM Pedido p WHERE p.vianda.distribuidora.nombre = :nombreDistribuidora")
-    List<Pedido> findByDistribuidora(@Param("nombreDistribuidora") String nombreDistribuidora);
+    @Query("SELECT p FROM Pedido p WHERE p.vianda.distribuidora.nombre = :nombreDistribuidora AND (p.fecha BETWEEN :inicioDia AND :finDia)")
+    List<Pedido> findPedidosDelDiaByDistribuidora(@Param("nombreDistribuidora") String nombreDistribuidora, @Param("inicioDia")LocalDateTime inicioDia, @Param("finDia") LocalDateTime finDia);
 
     @Query("SELECT p FROM Pedido p WHERE p.fecha BETWEEN :inicioDia AND :finDia")
     List<Pedido> findPedidosDelDia(@Param("inicioDia")LocalDateTime inicioDia, @Param("finDia") LocalDateTime finDia);

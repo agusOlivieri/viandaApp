@@ -50,11 +50,19 @@ public class PedidoService {
     }
 
     public List<Pedido> getAllByDistribuidora(String distribuidoraNombre) {
-        return pedidoRepository.findByDistribuidora(distribuidoraNombre);
+        LocalDate hoy = LocalDate.now();
+        LocalDateTime inicioDia = hoy.atStartOfDay();
+        LocalDateTime finDia = hoy.atTime(LocalTime.MAX);
+
+        return pedidoRepository.findPedidosDelDiaByDistribuidora(distribuidoraNombre, inicioDia, finDia);
     }
 
-    public byte[] generarRemitoCSV() {
-        List<Pedido> pedidos = getPedidosDelDia();
+    public byte[] generarRemitoCSV(String distribuidoraNombre) {
+        LocalDate hoy = LocalDate.now();
+        LocalDateTime inicioDia = hoy.atStartOfDay();
+        LocalDateTime finDia = hoy.atTime(LocalTime.MAX);
+
+        List<Pedido> pedidos = pedidoRepository.findPedidosDelDiaByDistribuidora(distribuidoraNombre, inicioDia, finDia);
 
         StringBuilder csv = new StringBuilder();
         csv.append("LEGAJO,NOMBRE,VIANDA,FECHA\n");
@@ -69,13 +77,5 @@ public class PedidoService {
         }
 
         return csv.toString().getBytes(StandardCharsets.UTF_8);
-    }
-
-    public List<Pedido> getPedidosDelDia() {
-        LocalDate hoy = LocalDate.now();
-        LocalDateTime inicioDia = hoy.atStartOfDay();
-        LocalDateTime finDia = hoy.atTime(LocalTime.MAX);
-
-        return pedidoRepository.findPedidosDelDia(inicioDia, finDia);
     }
 }
