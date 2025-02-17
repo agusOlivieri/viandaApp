@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,5 +53,15 @@ public class PedidoController {
         headers.setContentDisposition(ContentDisposition.attachment().filename("Remito_Pedidos.csv").build());
 
         return new ResponseEntity<>(csvBytes, headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/reporte/mensual")
+    public ResponseEntity<byte[]> descargarExcel(@RequestParam int year, @RequestParam int month) throws IOException {
+        byte[] excelData = pedidoService.generarExcelMensual(year, month);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=reporte_pedidos.xlsx")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(excelData);
     }
 }
