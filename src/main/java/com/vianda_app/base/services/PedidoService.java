@@ -76,7 +76,7 @@ public class PedidoService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         for (Pedido pedido : pedidos) {
-            csv.append(pedido.getId()).append(",");
+            csv.append(pedido.getUsuario().getId()).append(",");
             csv.append(pedido.getUsuario().getNombre()).append(",");
             csv.append(pedido.getVianda().getNombre()).append(",");
             csv.append(pedido.getFecha().format(formatter)).append("\n");
