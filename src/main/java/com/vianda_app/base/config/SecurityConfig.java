@@ -77,7 +77,7 @@ public class SecurityConfig {
         configuration.setAllowedHeaders(List.of("*"));
 
         // Habilita credenciales (pero no puedes usar "*")
-        configuration.setAllowCredentials(true);
+        configuration.setAllowCredentials(false);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
