@@ -70,7 +70,7 @@ public class SecurityConfig {
         // Especifica los dominios permitidos
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:5173",  // Para desarrollo
-                "https://vianda-pq7hahhn9-agustins-projects-93113cbf.vercel.app"  // Para producción
+                "https://vianda-r5u4mw693-agustins-projects-93113cbf.vercel.app"  // Para producción
         ));
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
