@@ -37,7 +37,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-//                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/pedidos/**").permitAll()
@@ -70,7 +70,7 @@ public class SecurityConfig {
         // Especifica los dominios permitidos
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:5173",  // Para desarrollo
-                "https://vianda-pq7hahhn9-agustins-projects-93113cbf.vercel.app/"  // Para producción
+                "https://vianda-pq7hahhn9-agustins-projects-93113cbf.vercel.app"  // Para producción
         ));
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
