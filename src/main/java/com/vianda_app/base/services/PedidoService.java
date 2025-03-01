@@ -44,15 +44,19 @@ public class PedidoService {
 
     @Transactional
     public Pedido create(Integer usuarioId, Integer viandaId, LocalDateTime fechaHora) {
-        Usuario usuario = usuarioService.getById(usuarioId);
-        Vianda vianda = viandaService.getById(viandaId);
+        try {
+            Usuario usuario = usuarioService.getById(usuarioId);
+            Vianda vianda = viandaService.getById(viandaId);
 
-        Pedido pedido = new Pedido(usuario, vianda, fechaHora);
-        Pedido savedPedido = pedidoRepository.save(pedido);
+            Pedido pedido = new Pedido(usuario, vianda, fechaHora);
+            Pedido savedPedido = pedidoRepository.save(pedido);
 
-        pedidoSseController.enviarPedido(savedPedido);
+            pedidoSseController.enviarPedido(savedPedido);
 
-        return savedPedido;
+            return savedPedido;
+        } catch (Exception e) {
+            throw  new RuntimeException("Error al guardar el pedido en la base de datos", e);
+        }
     }
 
     public List<Pedido> getAllByDistribuidora(String distribuidoraNombre) {
