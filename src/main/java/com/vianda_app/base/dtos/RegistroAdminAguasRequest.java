@@ -1,6 +1,6 @@
 package com.vianda_app.base.dtos;
 
-public class RegistroAdminRequest {
+public class RegistroAdminAguasRequest {
     private String username;
 
     private String password;
@@ -9,9 +9,7 @@ public class RegistroAdminRequest {
 
     private String email;
 
-    private String distribuidora;
-
-    public RegistroAdminRequest() {
+    public RegistroAdminAguasRequest() {
     }
 
     public String getUsername() {
@@ -44,13 +42,5 @@ public class RegistroAdminRequest {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getDistribuidora() {
-        return distribuidora;
-    }
-
-    public void setDistribuidora(String distribuidora) {
-        this.distribuidora = distribuidora;
     }
 }

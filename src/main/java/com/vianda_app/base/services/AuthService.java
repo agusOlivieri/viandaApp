@@ -2,7 +2,8 @@ package com.vianda_app.base.services;
 
 import com.vianda_app.base.controllers.TokenResponse;
 import com.vianda_app.base.dtos.LoginRequest;
-import com.vianda_app.base.dtos.RegistroAdminRequest;
+import com.vianda_app.base.dtos.RegistroAdminAguasRequest;
+import com.vianda_app.base.dtos.RegistroAdminDistribuidoraRequest;
 import com.vianda_app.base.dtos.RegistroClienteRequest;
 import com.vianda_app.base.entities.*;
 import com.vianda_app.base.repositories.AreaRepository;
@@ -64,7 +65,7 @@ public class AuthService {
         return new TokenResponse(jwtToken, refreshToken);
     };
 
-    public TokenResponse registerAdmin(RegistroAdminRequest request) {
+    public TokenResponse registerAdminDistribuidora(RegistroAdminDistribuidoraRequest request) {
         ViandaDistribuidora distribuidora = distribuidoraRepository.findByNombre(request.getDistribuidora()).orElseThrow(() -> new RuntimeException("Distribuidora no encontrada: " + request.getDistribuidora()));
 
         AdministradorDistribuidora administradorDistribuidora = new AdministradorDistribuidora(
@@ -75,9 +76,26 @@ public class AuthService {
                 distribuidora
         );
 
-        AdministradorDistribuidora adminNuevo = usuarioService.saveAdmin(administradorDistribuidora);
+        AdministradorDistribuidora adminNuevo = usuarioService.saveAdminDistribuidora(administradorDistribuidora);
         var jwtToken = jwtService.generateToken(administradorDistribuidora);
         var refreshToken = jwtService.generateRefreshToken(administradorDistribuidora);
+
+        saveUserToken(adminNuevo, jwtToken);
+        return new TokenResponse(jwtToken, refreshToken);
+    };
+
+    public TokenResponse registerAdminAguas(RegistroAdminAguasRequest request) {
+
+        AdministradorAguas administradorAguas = new AdministradorAguas(
+                request.getUsername(),
+                request.getApellido(),
+                request.getEmail(),
+                passwordEncoder.encode(request.getPassword())
+        );
+
+        AdministradorAguas adminNuevo = usuarioService.saveAdminAguas(administradorAguas);
+        var jwtToken = jwtService.generateToken(administradorAguas);
+        var refreshToken = jwtService.generateRefreshToken(administradorAguas);
 
         saveUserToken(adminNuevo, jwtToken);
         return new TokenResponse(jwtToken, refreshToken);
