@@ -5,18 +5,18 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "administradores")
 @PrimaryKeyJoinColumn(name = "usuario_id")
-public class Administrador extends Usuario{
+public class AdministradorDistribuidora extends Usuario{
 
     @ManyToOne
     @JoinColumn(name = "distribuidora_id", nullable = false)
     private ViandaDistribuidora distribuidora;
 
-    public Administrador(String nombre, String apellido, String email, String password, ViandaDistribuidora distribuidora) {
+    public AdministradorDistribuidora(String nombre, String apellido, String email, String password, ViandaDistribuidora distribuidora) {
         super(nombre, apellido, email, password);
         this.distribuidora = distribuidora;
     }
 
-    public Administrador() {
+    public AdministradorDistribuidora() {
         super();
     }
 

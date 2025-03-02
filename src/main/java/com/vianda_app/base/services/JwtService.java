@@ -1,6 +1,6 @@
 package com.vianda_app.base.services;
 
-import com.vianda_app.base.entities.Administrador;
+import com.vianda_app.base.entities.AdministradorDistribuidora;
 import com.vianda_app.base.entities.Cliente;
 import com.vianda_app.base.entities.Usuario;
 import io.jsonwebtoken.Claims;
@@ -65,8 +65,8 @@ public class JwtService {
 
         if (usuario instanceof Cliente cliente) {
             claims.put("area", cliente.getArea().getNombre());
-        } else if (usuario instanceof  Administrador administrador) {
-            claims.put("distribuidora", administrador.getDistribuidora().getNombre());
+        } else if (usuario instanceof  AdministradorDistribuidora administradorDistribuidora) {
+            claims.put("distribuidora", administradorDistribuidora.getDistribuidora().getNombre());
         }
 
         return Jwts.builder()

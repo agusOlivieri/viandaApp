@@ -67,7 +67,7 @@ public class AuthService {
     public TokenResponse registerAdmin(RegistroAdminRequest request) {
         ViandaDistribuidora distribuidora = distribuidoraRepository.findByNombre(request.getDistribuidora()).orElseThrow(() -> new RuntimeException("Distribuidora no encontrada: " + request.getDistribuidora()));
 
-        Administrador administrador = new Administrador(
+        AdministradorDistribuidora administradorDistribuidora = new AdministradorDistribuidora(
                 request.getUsername(),
                 request.getApellido(),
                 request.getEmail(),
@@ -75,9 +75,9 @@ public class AuthService {
                 distribuidora
         );
 
-        Administrador adminNuevo = usuarioService.saveAdmin(administrador);
-        var jwtToken = jwtService.generateToken(administrador);
-        var refreshToken = jwtService.generateRefreshToken(administrador);
+        AdministradorDistribuidora adminNuevo = usuarioService.saveAdmin(administradorDistribuidora);
+        var jwtToken = jwtService.generateToken(administradorDistribuidora);
+        var refreshToken = jwtService.generateRefreshToken(administradorDistribuidora);
 
         saveUserToken(adminNuevo, jwtToken);
         return new TokenResponse(jwtToken, refreshToken);

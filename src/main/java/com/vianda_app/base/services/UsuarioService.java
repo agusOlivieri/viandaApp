@@ -1,9 +1,9 @@
 package com.vianda_app.base.services;
 
-import com.vianda_app.base.entities.Administrador;
+import com.vianda_app.base.entities.AdministradorDistribuidora;
 import com.vianda_app.base.entities.Cliente;
 import com.vianda_app.base.entities.Usuario;
-import com.vianda_app.base.repositories.AdministradorRepository;
+import com.vianda_app.base.repositories.AdminDistribuidoraRepository;
 import com.vianda_app.base.repositories.ClienteRepository;
 import com.vianda_app.base.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class UsuarioService {
     private ClienteRepository clienteRepository;
 
     @Autowired
-    private AdministradorRepository administradorRepository;
+    private AdminDistribuidoraRepository adminDistribuidoraRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -37,8 +37,8 @@ public class UsuarioService {
         return clienteRepository.save(cliente);
     }
 
-    public Administrador saveAdmin(Administrador admin) {
-        return administradorRepository.save(admin);
+    public AdministradorDistribuidora saveAdmin(AdministradorDistribuidora admin) {
+        return adminDistribuidoraRepository.save(admin);
     }
 
     public boolean existsByNombre(String nombre) {
