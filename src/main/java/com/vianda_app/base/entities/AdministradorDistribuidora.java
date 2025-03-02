@@ -3,7 +3,7 @@ package com.vianda_app.base.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "administradores")
+@Table(name = "administradores_distribuidoras")
 @PrimaryKeyJoinColumn(name = "usuario_id")
 public class AdministradorDistribuidora extends Usuario{
 
