@@ -24,6 +24,11 @@ public class PedidoController {
         return pedidoService.getAll();
     }
 
+    @GetMapping("/today")
+    public List<Pedido> getAllPedidosDelDia() {
+        return pedidoService.getAllDelDia();
+    }
+
     @PostMapping("/new")
     public ResponseEntity<Object> createPedido(@RequestBody PedidoDTO request) {
         try {

@@ -12,6 +12,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -65,6 +66,14 @@ public class PedidoService {
         LocalDateTime finDia = hoy.atTime(LocalTime.MAX);
 
         return pedidoRepository.findPedidosDelDiaByDistribuidora(distribuidoraNombre, inicioDia, finDia);
+    }
+
+    public List<Pedido> getAllDelDia() {
+        LocalDate hoy = LocalDate.now();
+        LocalDateTime inicioDia = hoy.atStartOfDay();
+        LocalDateTime finDia = hoy.atTime(LocalTime.MAX);
+
+        return pedidoRepository.findPedidosDelDia(inicioDia, finDia);
     }
 
     public byte[] generarRemitoCSV(String distribuidoraNombre) {
