@@ -99,7 +99,10 @@ public class PedidoService {
     }
 
     public List<Map<String, Object>> generarReporteMensual(int year, int month) {
-        List<Pedido> pedidos = pedidoRepository.findPedidosDelMes(year, month);
+        LocalDateTime fechaInicio = LocalDate.of(year, month, 16).minusMonths(1).atTime(23, 59);
+        LocalDateTime fechaFin = LocalDateTime.of(year, month, 15, 0, 0);
+
+        List<Pedido> pedidos = pedidoRepository.findPedidosDelMes(fechaInicio, fechaFin);
 
         Map<String, Map<String, Map<Integer, Double>>> reporte = new HashMap<>();
 
@@ -165,8 +168,13 @@ public class PedidoService {
         for (int i = 0; i < headers.length; i++) {
             headerRow.createCell(i).setCellValue(headers[i]);
         }
-        for (int i = 1; i <= 30; i++) {
-            headerRow.createCell(i + 3).setCellValue(i);
+
+        int colIndex = headers.length;
+        for (int i = 16; i <= 31; i++) {
+            headerRow.createCell(colIndex++).setCellValue(i);
+        }
+        for (int i = 1; i <= 15; i++) {
+            headerRow.createCell(colIndex++).setCellValue(i);
         }
 
         int rowIdx = 1;
