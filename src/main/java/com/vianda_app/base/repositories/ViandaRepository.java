@@ -9,5 +9,6 @@ import java.util.List;
 
 @Repository
 public interface ViandaRepository extends JpaRepository<Vianda, Integer> {
-    List<Vianda> findByDistribuidora(ViandaDistribuidora distribuidora);
+
+    List<Vianda> findByDistribuidoraAndActivoTrue(ViandaDistribuidora distribuidora);
 }

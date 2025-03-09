@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ViandaService {
@@ -42,12 +43,16 @@ public class ViandaService {
         if (!viandaRepository.existsById(viandaId)) {
             throw new IllegalArgumentException("No se encontró la vianda con ID: " + viandaId);
         }
-        viandaRepository.deleteById(viandaId);
+
+        Vianda vianda = getById(viandaId);
+        vianda.setActivo(false);
+
+        viandaRepository.save(vianda);
     }
 
     public List<Vianda> getAllByDistribuidora(String distribuidoraNombre) {
         ViandaDistribuidora distribuidora = distribuidoraService.getByNombre(distribuidoraNombre);
 
-        return viandaRepository.findByDistribuidora(distribuidora);
+        return viandaRepository.findByDistribuidoraAndActivoTrue(distribuidora);
     }
 }

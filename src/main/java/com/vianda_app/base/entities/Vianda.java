@@ -17,6 +17,8 @@ public class Vianda {
 
     private Integer precio;
 
+    private boolean activo = true;
+
     @ManyToOne
     @JoinColumn(name = "distribuidora_id")
     private ViandaDistribuidora distribuidora;
@@ -69,5 +71,13 @@ public class Vianda {
 
     public void setDistribuidora(ViandaDistribuidora distribuidora) {
         this.distribuidora = distribuidora;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
     }
 }
