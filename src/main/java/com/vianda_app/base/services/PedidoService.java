@@ -7,9 +7,7 @@ import com.vianda_app.base.entities.Vianda;
 import com.vianda_app.base.entities.ViandaDistribuidora;
 import com.vianda_app.base.repositories.PedidoRepository;
 import jakarta.transaction.Transactional;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
@@ -99,8 +97,8 @@ public class PedidoService {
     }
 
     public List<Map<String, Object>> generarReporteMensual(int year, int month) {
-        LocalDateTime fechaInicio = LocalDate.of(year, month, 16).minusMonths(1).atTime(23, 59);
-        LocalDateTime fechaFin = LocalDateTime.of(year, month, 15, 0, 0);
+        LocalDateTime fechaInicio = LocalDate.of(year, month, 16).minusMonths(1).atStartOfDay();
+        LocalDateTime fechaFin = LocalDateTime.of(year, month, 15, 23, 59);
 
         List<Pedido> pedidos = pedidoRepository.findPedidosDelMes(fechaInicio, fechaFin);
 
@@ -146,7 +144,15 @@ public class PedidoService {
                 fila.put("Proveedor", proveedor);
                 fila.put("Área", "Distribución");
 
-                for (int i = 1; i <= 30; i++) {
+                LocalDate fechaAux = fechaInicio.toLocalDate();
+                int diaInicio = fechaAux.getDayOfMonth();
+                int diasMesAnterior = fechaAux.lengthOfMonth();
+                int diaFin = fechaFin.getDayOfMonth();
+
+                for (int i = diaInicio; i <= diasMesAnterior; i++) {
+                    fila.put(String.valueOf(i), preciosPorDia.getOrDefault(i, 0.0));
+                }
+                for (int i = 1; i <= diaFin; i++) {
                     fila.put(String.valueOf(i), preciosPorDia.getOrDefault(i, 0.0));
                 }
 
@@ -163,27 +169,53 @@ public class PedidoService {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Pedidos del Mes");
 
+        CellStyle headerStyle = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        font.setBold(true);
+        headerStyle.setFont(font);
+        headerStyle.setAlignment(HorizontalAlignment.CENTER);
+
         Row headerRow = sheet.createRow(0);
-        String[] headers = {"Legajo", "Nombre y Apellido", "Proveedor", "Área"};
-        for (int i = 0; i < headers.length; i++) {
-            headerRow.createCell(i).setCellValue(headers[i]);
+        String[] columnasBase = { "Legajo", "Nombre y Apellido", "Proveedor", "Área" };
+
+        int colIndex = 0;
+        for (String columna : columnasBase) {
+            Cell cell = headerRow.createCell(colIndex++);
+            cell.setCellValue(columna);
+            cell.setCellStyle(headerStyle);
         }
 
-        int colIndex = headers.length;
         for (int i = 16; i <= 31; i++) {
-            headerRow.createCell(colIndex++).setCellValue(i);
+            Cell cell = headerRow.createCell(colIndex++);
+            cell.setCellValue(String.valueOf(i));
+            cell.setCellStyle(headerStyle);
         }
         for (int i = 1; i <= 15; i++) {
-            headerRow.createCell(colIndex++).setCellValue(i);
+            Cell cell = headerRow.createCell(colIndex++);
+            cell.setCellValue(String.valueOf(i));
+            cell.setCellStyle(headerStyle);
         }
 
-        int rowIdx = 1;
+        int rowIndex = 1;
         for (Map<String, Object> fila : datos) {
-            Row row = sheet.createRow(rowIdx++);
-            int colIdx = 0;
-            for (Object value: fila.values()) {
-                row.createCell(colIdx++).setCellValue(value.toString());
+            Row row = sheet.createRow(rowIndex++);
+            colIndex = 0;
+
+            row.createCell(colIndex++).setCellValue(fila.get("Legajo").toString());
+            row.createCell(colIndex++).setCellValue(fila.get("Nombre y Apellido").toString());
+            row.createCell(colIndex++).setCellValue(fila.get("Proveedor").toString());
+            row.createCell(colIndex++).setCellValue(fila.get("Área").toString());
+
+            for (int i = 16; i <= 31; i++) {
+                row.createCell(colIndex++).setCellValue((Double) fila.getOrDefault(String.valueOf(i), 0.0));
             }
+            for (int i = 1; i <= 15; i++) {
+                row.createCell(colIndex++).setCellValue((Double) fila.getOrDefault(String.valueOf(i), 0.0));
+            }
+        }
+
+        for (int i = 0; i < colIndex; i++) {
+            sheet.autoSizeColumn(i);
         }
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
